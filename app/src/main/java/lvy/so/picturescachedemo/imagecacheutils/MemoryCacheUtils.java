@@ -14,16 +14,18 @@ import java.util.HashMap;
  * @TODO
  */
 public class MemoryCacheUtils {
-    private HashMap<String, Bitmap> memoryHashMap = new HashMap<>();  //强引用存储图片 浪费内存
-    private HashMap<String, SoftReference<Bitmap>> softReferenceHashMap = new HashMap<>();   //用图片存储采取软引用 系统内存紧张的时候会回收
+//    private HashMap<String, Bitmap> memoryHashMap = new HashMap<>();  //强引用存储图片 浪费内存
+//    private HashMap<String, SoftReference<Bitmap>> softReferenceHashMap = new HashMap<>();   //用图片存储采取软引用 系统内存紧张的时候会回收
     private LruCache<String, Bitmap> mMemoryLruCache;
 
     public MemoryCacheUtils() {
-        long maxMemory = Runtime.getRuntime().maxMemory() / 8;
-        mMemoryLruCache = new LruCache<String, Bitmap>((int) maxMemory) {
+
+        int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);  //最大可用虚拟内存，超过这一个数值将会抛出OutOfMemory
+        int cacheSize = maxMemory / 8; //使用第1/8的可用内存为这个内存缓存。
+        mMemoryLruCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap value) {
-                return value.getByteCount();
+                return value.getByteCount() / 1024; //缓存大小将以千字节为单位而不是项目数。
             }
         };
     }
@@ -56,7 +58,9 @@ public class MemoryCacheUtils {
     public void setMemoryBitMap(String imgPath, Bitmap bitmap) {
 //        memoryHashMap.put(imgPath, bitmap);
 //        softReferenceHashMap.put(imgPath, new SoftReference(bitmap));
-        mMemoryLruCache.put(imgPath, bitmap);
+        if (getMemoryBitMap(imgPath) == null) {
+            mMemoryLruCache.put(imgPath, bitmap);
+        }
     }
 
 }
