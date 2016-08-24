@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -40,12 +41,12 @@ public class MainActivity extends AppCompatActivity {
     private void initView() {
         gson = new Gson();
         mRecyclerviewData = (RecyclerView) findViewById(R.id.recyclerview_data);
-        mRecyclerviewData.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        mRecyclerviewData.setLayoutManager(new LinearLayoutManager(mContext));
         mList = new ArrayList<>();
         mAdapter = new RecyclerViewDataAdapter(mContext, mList);
         mRecyclerviewData.setAdapter(mAdapter);
-        SpacesItemDecoration decoration=new SpacesItemDecoration(16);
-        mRecyclerviewData.addItemDecoration(decoration);
+//        SpacesItemDecoration decoration=new SpacesItemDecoration(16);
+//        mRecyclerviewData.addItemDecoration(decoration);
     }
 
     /***
@@ -84,22 +85,4 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
-
-        private int space;
-
-        public SpacesItemDecoration(int space) {
-            this.space=space;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            outRect.left=space;
-            outRect.right=space;
-            outRect.bottom=space;
-            if(parent.getChildAdapterPosition(view)==0){
-                outRect.top=space;
-            }
-        }
-    }
 }
