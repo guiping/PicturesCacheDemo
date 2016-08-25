@@ -1,7 +1,7 @@
 package lvy.so.picturescachedemo.imagecacheutils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v4.util.LruCache;
 import android.widget.ImageView;
 
 /**
@@ -13,13 +13,13 @@ import android.widget.ImageView;
  */
 public class LoadImage {
     private static LoadImage instance;
-    private LocalCacheUtils mLocalCache;
+    private DiskCacheUtils mLocalCache;
     private MemoryCacheUtils mMemoryCache;
     private NetWorkCacheUtils mNetWorkCache;
 
-    private LoadImage() {
+    private LoadImage(Context context) {
         mMemoryCache = new MemoryCacheUtils();
-        mLocalCache = new LocalCacheUtils();
+        mLocalCache = new DiskCacheUtils(context);
         mNetWorkCache = new NetWorkCacheUtils(mLocalCache, mMemoryCache);
 
     }
@@ -29,11 +29,11 @@ public class LoadImage {
      *
      * @return
      */
-    public static LoadImage getLoadImageInstance() {
+    public static LoadImage getLoadImageInstance(Context context) {
         if (instance == null) {
             synchronized (LoadImage.class) {
                 if (instance == null) {
-                    instance = new LoadImage();
+                    instance = new LoadImage(context);
                 }
             }
         }
@@ -54,7 +54,7 @@ public class LoadImage {
             img.setImageBitmap(bitmap);
             return;
         }
-        bitmap = mLocalCache.getLocalBitMap(imgPath);
+        bitmap = mLocalCache.getDiskCacheBitMap(imgPath);
         if(bitmap != null ) {
             img.setImageBitmap(bitmap);
             return;

@@ -41,7 +41,7 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        LoadImage.getLoadImageInstance().showImg(holder.itemImg, mList.get(position).getUrl());
+        LoadImage.getLoadImageInstance(mContext).showImg(holder.itemImg, mList.get(position).getUrl());
         holder.tvName.setText(mList.get(position).getWho());
 
     }

@@ -2,6 +2,7 @@ package lvy.so.picturescachedemo.imagecacheutils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,11 +20,11 @@ import okhttp3.Response;
  * @TODO
  */
 public class NetWorkCacheUtils {
-    private LocalCacheUtils mLocaCache;
+    private DiskCacheUtils mLocaCache;
     private MemoryCacheUtils mMemoryCache;
     private static final int pixelsWidth = 480, pixelsHeight = 800;   //默认手机分辨率设置为 480 * 800  后边可以更改为自动获取
 
-    public NetWorkCacheUtils(LocalCacheUtils localCache, MemoryCacheUtils memoryCache) {
+    public NetWorkCacheUtils(DiskCacheUtils localCache, MemoryCacheUtils memoryCache) {
         this.mLocaCache = localCache;
         this.mMemoryCache = memoryCache;
     }
@@ -37,6 +38,7 @@ public class NetWorkCacheUtils {
             @Override
             public void onFailure(Call call, IOException e) {
                 //错误了不做任何处理
+                Log.e("出错了-->","--->>>>出错啦出错啦");
             }
 
             @Override
@@ -64,8 +66,8 @@ public class NetWorkCacheUtils {
                     bitmap = BitmapFactory.decodeStream(is, null, options);
                     if (bitmap != null) {
                         //TODO 这个地方进行图片压缩处理
-                        mLocaCache.setLocalBitMap(imgPath, bitmap);
-                        mMemoryCache.setMemoryBitMap(imgPath, bitmap);
+//                        mLocaCache.addBitmapToCache(imgPath, bitmap);
+//                        mMemoryCache.setMemoryBitMap(imgPath, bitmap);
                     }
                 }
             }
