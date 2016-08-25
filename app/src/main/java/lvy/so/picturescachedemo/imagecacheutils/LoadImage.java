@@ -2,6 +2,7 @@ package lvy.so.picturescachedemo.imagecacheutils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.widget.ImageView;
 
 /**
@@ -21,7 +22,6 @@ public class LoadImage {
         mMemoryCache = new MemoryCacheUtils();
         mLocalCache = new DiskCacheUtils(context);
         mNetWorkCache = new NetWorkCacheUtils(mLocalCache, mMemoryCache);
-
     }
 
     /***
@@ -50,21 +50,17 @@ public class LoadImage {
         //TODO 先去缓存中读取图片
         Bitmap bitmap = null;
         bitmap = mMemoryCache.getMemoryBitMap(imgPath);
-        if (bitmap != null) {
+        if (bitmap != null && img.getTag().equals(imgPath)) {
             img.setImageBitmap(bitmap);
             return;
         }
         bitmap = mLocalCache.getDiskCacheBitMap(imgPath);
-        if(bitmap != null ) {
+        if (bitmap != null && img.getTag().equals(imgPath)) {
             img.setImageBitmap(bitmap);
             return;
         }
-        bitmap = mNetWorkCache.getNetWorkBitMap(imgPath);
-        if(bitmap != null ) {
-            img.setImageBitmap(bitmap);
-            return;
-        }
-
+        Log.e("------->>>哈哈哈", "hjashkdhkashdkashdkashdkasdj000000000000");
+         mNetWorkCache.getNetWorkBitMap(imgPath,img);
         //TODO 加载失败
     }
 

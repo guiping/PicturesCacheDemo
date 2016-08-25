@@ -2,7 +2,9 @@ package lvy.so.picturescachedemo.imagecacheutils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.util.Log;
+import android.widget.ImageView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,24 +31,24 @@ public class NetWorkCacheUtils {
         this.mMemoryCache = memoryCache;
     }
 
-    Bitmap bitmap = null;
 
-    public Bitmap getNetWorkBitMap(final String imgPath) {
-
+    public void getNetWorkBitMap(final String imgPath, final ImageView img) {
+        Log.e("-------", "====" + imgPath);
         //下载网络图片 然后返回 为了简单起见直接用OkHttp 下载了  主要是为了写三级缓存 先不管文件下载
         OkHttpUtils._downloadAsyn(imgPath, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 //错误了不做任何处理
-                Log.e("出错了-->","--->>>>出错啦出错啦");
+                Log.e("出错了-->", "--->>>>出错啦出错啦");
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     InputStream is = response.body().byteStream();
-                    //FIXME 图片压缩处理这块儿可以单独提出来处理
-
+                    if (is == null) {
+                        return;
+                    }
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inJustDecodeBounds = true;   //设置为true 先不把图片读到内存中
                     BitmapFactory.decodeFile(imgPath, options);
@@ -63,16 +65,30 @@ public class NetWorkCacheUtils {
                     options.inJustDecodeBounds = false;
                     options.inSampleSize = 2;  //将宽度和高度 压缩成原来的1/2
                     options.inPreferredConfig = Bitmap.Config.ARGB_4444;
-                    bitmap = BitmapFactory.decodeStream(is, null, options);
+                    final Bitmap bitmap = BitmapFactory.decodeStream(is, null, options);
                     if (bitmap != null) {
-                        //TODO 这个地方进行图片压缩处理
-//                        mLocaCache.addBitmapToCache(imgPath, bitmap);
-//                        mMemoryCache.setMemoryBitMap(imgPath, bitmap);
+                        mLocaCache.addBitmapToCache(imgPath, bitmap);
+                        mMemoryCache.setMemoryBitMap(imgPath, bitmap);
+
+                        if (img.getTag().equals(imgPath)) {
+                            img.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    img.setImageBitmap(bitmap);
+                                }
+                            });
+                        } else {
+                            img.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    img.setBackgroundColor(Color.parseColor("#FF80AB"));
+                                }
+                            });
+                        }
                     }
                 }
             }
         });
-        return bitmap;
     }
 
 

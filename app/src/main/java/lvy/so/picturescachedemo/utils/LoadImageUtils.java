@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 
@@ -40,9 +41,7 @@ public class LoadImageUtils {
     public static File getDiskDir(Context context, String uniqueName) {
         // 检查是否安装或存储介质是内置的，如果是这样的话，尽量使用外部高速缓存目录，否则使用内部缓存目录
         String diskDirPath = Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) || !Environment.isExternalStorageRemovable()
-                ? context.getExternalCacheDir().getPath() : context.getCacheDir().getPath();
-
+                ? Environment.getExternalStorageDirectory().getAbsolutePath() : Environment.getDataDirectory().getAbsolutePath();
         return new File(diskDirPath + File.separator + uniqueName);
-
     }
 }

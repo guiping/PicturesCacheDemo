@@ -39,22 +39,22 @@ public class DiskCacheUtils {
      * @return
      */
     public Bitmap getDiskCacheBitMap(String imgPath) {
-
         try {
             File file = LoadImageUtils.getDiskDir(mContext, DISK_CACHE_SUBDIR);
-            if(!file.exists()){
+
+            if (!file.exists()) {
                 file.exists();
             }
-            File cacheFile = new File(file,imgPath);
-            Log.e("-->>>路径000",cacheFile+"--" + file);
-            Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(cacheFile));
+
+            Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
             if (bitmap != null) {
                 return bitmap;
             } else {
                 return null;
             }
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            Log.e("-->>>路径000","====000" +e.getMessage());
         }
 
         return null;
@@ -67,7 +67,7 @@ public class DiskCacheUtils {
      * @param bitMap
      */
     public void addBitmapToCache(String imgPath, Bitmap bitMap) {
-
+        Log.e("----=====","=======addBitmapToCache");
         if (getDiskCacheBitMap(imgPath) != null) {
             return;
         }
@@ -77,10 +77,9 @@ public class DiskCacheUtils {
             if (!file.exists()) {
                 file.mkdirs();
             }
-            File cacheFile = new File(file,imgPath);
-            Log.e("-->>>路径",cacheFile+"--" + file);
-            bitMap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(cacheFile));
-        } catch (FileNotFoundException e) {
+//            File cacheFile = new File(file,imgPath);
+            bitMap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(file));
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

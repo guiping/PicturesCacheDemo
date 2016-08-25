@@ -1,6 +1,7 @@
 package lvy.so.picturescachedemo.ui;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.media.Image;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -41,6 +42,8 @@ public class RecyclerViewDataAdapter extends RecyclerView.Adapter<RecyclerViewDa
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.itemImg.setTag(mList.get(position).getUrl());
+        holder.itemImg.setBackgroundColor(Color.parseColor("#FF80AB"));
         LoadImage.getLoadImageInstance(mContext).showImg(holder.itemImg, mList.get(position).getUrl());
         holder.tvName.setText(mList.get(position).getWho());
 
