@@ -41,7 +41,7 @@ public class LoadImageUtils {
     public static File getDiskDir(Context context, String uniqueName) {
         // 检查是否安装或存储介质是内置的，如果是这样的话，尽量使用外部高速缓存目录，否则使用内部缓存目录
         String diskDirPath = Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) || !Environment.isExternalStorageRemovable()
-                ? Environment.getExternalStorageDirectory().getAbsolutePath() : Environment.getDataDirectory().getAbsolutePath();
+                ? Environment.getExternalStorageDirectory().getPath() : Environment.getDataDirectory().getPath();
         return new File(diskDirPath + File.separator + uniqueName);
     }
 }

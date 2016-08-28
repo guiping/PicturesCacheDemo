@@ -59,7 +59,6 @@ public class LoadImage {
             img.setImageBitmap(bitmap);
             return;
         }
-        Log.e("------->>>哈哈哈", "hjashkdhkashdkashdkashdkasdj000000000000");
          mNetWorkCache.getNetWorkBitMap(imgPath,img);
         //TODO 加载失败
     }

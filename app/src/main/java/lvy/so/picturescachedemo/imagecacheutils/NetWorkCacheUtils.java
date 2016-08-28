@@ -70,7 +70,7 @@ public class NetWorkCacheUtils {
                         mLocaCache.addBitmapToCache(imgPath, bitmap);
                         mMemoryCache.setMemoryBitMap(imgPath, bitmap);
 
-                        if (img.getTag().equals(imgPath)) {
+                        if (img.getTag().equals(imgPath)) {  //避免加载图片错位
                             img.post(new Runnable() {
                                 @Override
                                 public void run() {

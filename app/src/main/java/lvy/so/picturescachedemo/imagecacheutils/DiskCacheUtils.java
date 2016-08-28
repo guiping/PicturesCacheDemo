@@ -41,12 +41,11 @@ public class DiskCacheUtils {
     public Bitmap getDiskCacheBitMap(String imgPath) {
         try {
             File file = LoadImageUtils.getDiskDir(mContext, DISK_CACHE_SUBDIR);
-
-            if (!file.exists()) {
-                file.exists();
+            File cacheFile = new File(file, imgPath);
+            if (!cacheFile.exists()) {   //判断找不到这个 图片的目录直接返回 null
+                return null;
             }
-
-            Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(file));
+            Bitmap bitmap = BitmapFactory.decodeStream(new FileInputStream(cacheFile));
             if (bitmap != null) {
                 return bitmap;
             } else {
@@ -54,7 +53,6 @@ public class DiskCacheUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.e("-->>>路径000","====000" +e.getMessage());
         }
 
         return null;
@@ -67,18 +65,20 @@ public class DiskCacheUtils {
      * @param bitMap
      */
     public void addBitmapToCache(String imgPath, Bitmap bitMap) {
-        Log.e("----=====","=======addBitmapToCache");
+        Log.e("----=====", "=======addBitmapToCache");
         if (getDiskCacheBitMap(imgPath) != null) {
             return;
         }
         try {
             //TODO  应该判断是否有SD卡
             File file = LoadImageUtils.getDiskDir(mContext, DISK_CACHE_SUBDIR);
-            if (!file.exists()) {
-                file.mkdirs();
+
+            File cacheFile = new File(file, imgPath);
+            if (!cacheFile.exists()) {
+                cacheFile.mkdirs();
             }
-//            File cacheFile = new File(file,imgPath);
-            bitMap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(file));
+            Log.e("0000",cacheFile.toString());
+            bitMap.compress(Bitmap.CompressFormat.JPEG, 100, new FileOutputStream(cacheFile));
         } catch (Exception e) {
             e.printStackTrace();
         }

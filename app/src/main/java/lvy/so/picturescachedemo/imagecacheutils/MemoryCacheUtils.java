@@ -17,7 +17,7 @@ import java.util.HashMap;
 public class MemoryCacheUtils {
     //    private HashMap<String, Bitmap> memoryHashMap = new HashMap<>();  //强引用存储图片 浪费内存
 //    private HashMap<String, SoftReference<Bitmap>> softReferenceHashMap = new HashMap<>();   //用图片存储采取软引用 系统内存紧张的时候会回收
-    private LruCache<String, Bitmap> mMemoryLruCache;
+    private LruCache<String, Bitmap> mMemoryLruCache;   // Android2.3+后，系统会优先考虑回收弱引用对象，官方提出使用LruCache  所以在用SoftReference不在靠谱
 
     public MemoryCacheUtils() {
 
@@ -62,6 +62,7 @@ public class MemoryCacheUtils {
         if (getMemoryBitMap(imgPath) == null) {
             mMemoryLruCache.put(imgPath, bitmap);
         }
+
     }
 
 }
