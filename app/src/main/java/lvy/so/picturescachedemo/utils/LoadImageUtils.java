@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by ping on 2016-08-25.
@@ -43,5 +45,28 @@ public class LoadImageUtils {
         String diskDirPath = Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) || !Environment.isExternalStorageRemovable()
                 ? Environment.getExternalStorageDirectory().getPath() : Environment.getDataDirectory().getPath();
         return new File(diskDirPath + File.separator + uniqueName);
+    }
+
+    public static String getFileMD5(String info) {
+        try {
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+            md5.update(info.getBytes("UTF-8"));
+            byte[] encryption = md5.digest();
+
+            StringBuffer strBuf = new StringBuffer();
+            for (int i = 0; i < encryption.length; i++) {
+                if (Integer.toHexString(0xff & encryption[i]).length() == 1) {
+                    strBuf.append("0").append(Integer.toHexString(0xff & encryption[i]));
+                } else {
+                    strBuf.append(Integer.toHexString(0xff & encryption[i]));
+                }
+            }
+
+            return strBuf.toString();
+        } catch (NoSuchAlgorithmException e) {
+            return "";
+        } catch (UnsupportedEncodingException e) {
+            return "";
+        }
     }
 }

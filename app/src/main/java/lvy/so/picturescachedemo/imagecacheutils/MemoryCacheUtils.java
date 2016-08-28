@@ -7,6 +7,8 @@ import android.util.Log;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
 
+import lvy.so.picturescachedemo.utils.LoadImageUtils;
+
 /**
  * @author gping  email: gping.vip@gmail.com
  * @date Created by 2016/8/24.15:33
@@ -38,12 +40,13 @@ public class MemoryCacheUtils {
      * @return
      */
     public Bitmap getMemoryBitMap(String imgPath) {
-//        memoryHashMap.get(imgPath);
-//        SoftReference<Bitmap> softReference = softReferenceHashMap.get(imgPath);
+        String fileName = LoadImageUtils.getFileMD5(imgPath);
+//        memoryHashMap.get(fileName);
+//        SoftReference<Bitmap> softReference = softReferenceHashMap.get(fileName);
 //        if (softReference != null) {
 //            return softReference.get();
 //        }
-        Bitmap bitmap = mMemoryLruCache.get(imgPath);
+        Bitmap bitmap = mMemoryLruCache.get(fileName);
         if (bitmap != null) {
             return bitmap;
         }
@@ -57,10 +60,12 @@ public class MemoryCacheUtils {
      * @param bitmap
      */
     public void setMemoryBitMap(String imgPath, Bitmap bitmap) {
-//        memoryHashMap.put(imgPath, bitmap);
-//        softReferenceHashMap.put(imgPath, new SoftReference(bitmap));
-        if (getMemoryBitMap(imgPath) == null) {
-            mMemoryLruCache.put(imgPath, bitmap);
+        String fileName = LoadImageUtils.getFileMD5(imgPath);
+//        memoryHashMap.put(fileName, bitmap);
+//        softReferenceHashMap.put(fileName, new SoftReference(bitmap));
+
+        if (getMemoryBitMap(fileName) == null) {
+            mMemoryLruCache.put(fileName, bitmap);
         }
 
     }
